@@ -1,4 +1,4 @@
-# Code Runner Extension
+# Dry Runner
 
 ## Description
 dry-runner extension is a tool that allows you to compile and run C/C++ code in vs code, with internal and external terminal.
