@@ -36,7 +36,7 @@ You can customize the behavior of the dry-runner extension by modifying the sett
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the dry-runner GitHub repository.
 
 ## License
-This extension is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This extension is licensed under the [MIT License](https://github.com/Hunter87ff/dry-runner/blob/main/LICENSE).
 
 ## Contact
 For any questions or inquiries, please join our discord server : [Join Server](https://discord.gg/vMnhpAyFZm)
