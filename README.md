@@ -12,7 +12,7 @@ dry-runner extension is a tool that allows you to compile and run C/C++ code in 
 > [!IMPORTANT]  
 > This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
 
-<img src="https://github.com/Hunter87ff/dry-runner/blob/main/img/installation.gif">
+![installation](img/installation.gif)
 
 ## Installation
 1. download vsix file from the latest release
