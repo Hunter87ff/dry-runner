@@ -21,13 +21,15 @@ dry-runner extension is a tool that allows you to compile and run C/C++ code in 
 4. select the vsix file that you've downloaded
 
 
-
-
 ## Usage
 1. Open a C/C++ file in your VS Code.
 2. To compile and run just click F5
 3. You've Done
 
+## Default Shortcut Key
+F5 : Start
+F5 : Restart
+F4 : Stop and close terminal
 
 ## Configuration
 You can customize the behavior of the dry-runner extension by modifying the settings. To access the settings, go to the preferences menu of your code editor and search for "dry-runner".
