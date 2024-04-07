@@ -1,11 +1,11 @@
 {
     "name": "dry-runner",
-    "displayName": "C/C++ Code Runner",
+    "displayName": "C/C+ Dry Runner",
     "description": "Run C/C++ code in one click.",
     "version": "1.0.0",
-    "publisher": "hunter87",
+    "publisher": "spruce",
     "author": {
-        "name": "Sourav Das"
+        "name": "hunter87"
     },
     "license": "MIT",
     "homepage": "https://github.com/hunter87/dry-runner",
@@ -24,7 +24,8 @@
         "c",
         "cpp",
         "run",
-        "pub"
+        "c++",
+        "compile"
     ],
     "categories": [
         "Programming Languages",
@@ -57,7 +58,7 @@
             "properties": {
                 "dry-runner.compilerPath": {
                     "type": "string",
-                    "default": "C:\\MinGW64\\bin\\g++.exe",
+                    "default": "C:\\MinGW64\\bin",
                     "description": "Compiler path for C/C++"
                 }
             }
