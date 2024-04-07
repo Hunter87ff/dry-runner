@@ -18,7 +18,7 @@
     },
     "icon": "icon.png",
     "engines": {
-        "vscode": "^1.63.0"
+        "vscode": "^1.75.0"
     },
     "keywords": [
         "c",
@@ -31,9 +31,7 @@
         "Programming Languages",
         "Other"
     ],
-    "activationEvents": [
-        "onCommand:dry-runner.run"
-    ],
+    "activationEvents": [],
     "main": "./out/extension.js",
     "contributes": {
         "commands": [
