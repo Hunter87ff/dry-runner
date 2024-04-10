@@ -9,8 +9,9 @@ dry-runner extension is a tool that allows you to compile and run C/C++ code in 
 - Customizable execution settings
 - Output display for easy debugging
 - Internal/External Terminal Support
-> [!IMPORTANT]  
-> This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
+
+<!-- > [!IMPORTANT]  
+> This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress! -->
 
 ![installation](img/installation.gif)
 

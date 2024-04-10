@@ -8,13 +8,13 @@
         "name": "hunter87"
     },
     "license": "MIT",
-    "homepage": "https://github.com/hunter87/dry-runner",
+    "homepage": "https://github.com/hunter87ff/dry-runner",
     "repository": {
         "type": "git",
-        "url": "https://github.com/hunter87/dry-runner"
+        "url": "https://github.com/hunter87ff/dry-runner"
     },
     "bugs": {
-        "url": "https://github.com/hunter87/dry-runner/issues"
+        "url": "https://github.com/hunter87ff/dry-runner/issues"
     },
     "icon": "icon.png",
     "engines": {
