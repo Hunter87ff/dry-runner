@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "C/C+ Runner",
     "description": "Run C/C++ code in one click.",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "publisher": "Spruce87",
     "author": {
         "name": "hunter87"

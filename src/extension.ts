@@ -7,7 +7,7 @@ let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
 let restartDisposable: vscode.Disposable;
 
-
+// C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe  -Command g++  "d:\Codes\testing\dsa\queue.cpp" -o "d:\Codes\testing\dsa\queue.exe"; d:\Codes\testing\dsa\queue.exe
 export function activate(context: vscode.ExtensionContext) {
     const config = vscode.workspace.getConfiguration('dry-runner'); //package.json
     const compilerPath = config.get('compilerPath') as string;
@@ -16,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
     const outlog = (message: string) => outputChannel.appendLine(message);
     const errlog = (message: string) => vscode.window.showErrorMessage(message);
     const isWin = process.platform === 'win32';
+    if(isWin){vscode.workspace.getConfiguration().update('terminal.integrated.shell.windows', 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe', vscode.ConfigurationTarget.Global);}
     let terminal: vscode.Terminal | undefined;
     let compiler:string;
     let c_compiler:string;
@@ -48,10 +49,10 @@ export function activate(context: vscode.ExtensionContext) {
         if(document?.languageId==='c'){compiler = c_compiler;}
         else if (document?.languageId==='cpp'){compiler = cpp_compiler;}
         if(isWin){
-            terminal.sendText(`${compiler}  "${fileDirectory}\\${fileBaseName}" -o "${fileDirectory}\\${fileBaseNameWithoutExt}.exe"; ${fileDirectory}\\${fileBaseNameWithoutExt}.exe`);
+            terminal.sendText(`powershell -Command ${compiler}  "${fileDirectory}\\${fileBaseName}" -o "${fileDirectory}\\${fileBaseNameWithoutExt}.exe"; ${fileDirectory.replace(/\\/g, "/")}/${fileBaseNameWithoutExt}.exe`);
         }
         else{
-            terminal.sendText(`${compiler}  "${fileBaseName}" -o "${fileBaseNameWithoutExt}.exe"; ./${fileBaseNameWithoutExt}.exe`);
+            terminal.sendText(`${compiler}  "${fileDirectory}\\${fileBaseName}" -o "${fileDirectory}\\${fileBaseNameWithoutExt}.exe"; ${fileDirectory}\\${fileBaseNameWithoutExt}.exe`);
         }
         terminal.show();
     }
@@ -63,19 +64,14 @@ export function activate(context: vscode.ExtensionContext) {
     terminal?.dispose();});
 
   restartDisposable = vscode.commands.registerCommand("dry-runner.restart", async () => {
-    terminal?.dispose();run();
+    terminal?.dispose();
+    run();
   });
 
   context.subscriptions.push(runDisposable);
   context.subscriptions.push(stopDisposable);
   context.subscriptions.push(restartDisposable);
 }
-
-vscode.window.onDidCloseTerminal(t => {
-    if (t.exitStatus && t.exitStatus.code) {
-        vscode.window.showInformationMessage(`Exit code: ${t.exitStatus.code}`);
-    }
-  });
 
 export function deactivate() {
     stopDisposable.dispose();
