@@ -7,7 +7,6 @@ let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
 let restartDisposable: vscode.Disposable;
 
-// C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe  -Command g++  "d:\Codes\testing\dsa\queue.cpp" -o "d:\Codes\testing\dsa\queue.exe"; d:\Codes\testing\dsa\queue.exe
 export function activate(context: vscode.ExtensionContext) {
     const config = vscode.workspace.getConfiguration('dry-runner'); //package.json
     const compilerPath = config.get('compilerPath') as string;
@@ -16,7 +15,6 @@ export function activate(context: vscode.ExtensionContext) {
     const outlog = (message: string) => outputChannel.appendLine(message);
     const errlog = (message: string) => vscode.window.showErrorMessage(message);
     const isWin = process.platform === 'win32';
-    if(isWin){vscode.workspace.getConfiguration().update('terminal.integrated.shell.windows', 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe', vscode.ConfigurationTarget.Global);}
     let terminal: vscode.Terminal | undefined;
     let compiler:string;
     let c_compiler:string;
