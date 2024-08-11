@@ -1,18 +1,18 @@
 # Dry Runner
 
 ## Description
-dry-runner extension is a tool that allows you to compile and run C/C++ code in vs code, with internal and external terminal.
+dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript code in vs code, with integreted terminal.
 
 ## Features
-- Run Run C,C++, Python, Java, PHP, Javascript code with a single click
+- Run C,C++, Python, Java, PHP, Javascript code with a single click
 - Support Windows/Linux both
-- Customizable execution settings
+- Customizable execution path settings
 - Output display for easy debugging
-
+- 
 <!-- > [!IMPORTANT]  
 > This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress! -->
 
-![installation](img/installation.gif)
+![dev. installation](img/installation.gif)
 
 ## Installation 
 1. Open VS code Extension section
