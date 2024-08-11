@@ -1,5 +1,5 @@
 # Dry Runner
-![Downloads](https://img.shields.io/visual-studio-marketplace/d/Spruce87.dry-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/Spruce87.dry-runner)
+[![Run and Test TypeScript](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml/badge.svg?branch=main)](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml) ![Downloads](https://img.shields.io/visual-studio-marketplace/d/Spruce87.dry-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/Spruce87.dry-runner)
 ## Description
 dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript code in vs code, with integreted terminal.
 
