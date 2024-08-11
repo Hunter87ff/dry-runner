@@ -1,7 +1,7 @@
 // import { exec, spawn, spawnSync, execSync } from "child_process";
 import { basename, dirname, extname } from "path";
 import * as vscode from "vscode";
-
+import * as utils from "./utils";
 // let extensionUri: vscode.Uri;
 let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
@@ -24,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
         if (path.includes("node")) {paths["node"] = path; }
         if (path.includes("php")) {paths["php"] = path; }
     });
+    const divider = utils.getDivider();
+    const prefix = divider === "&&"? null:"& ";
     const config = vscode.workspace.getConfiguration('dry-runner'); //package.json
     const mingwpath = config.get('mingwPath') || paths.mingw as string;
     const javapath = config.get('jdkPath') || paths.java as string;
@@ -47,14 +49,14 @@ export function activate(context: vscode.ExtensionContext) {
             php : `${phppath}\\php`,
         }
         let runCmd: { [key: string]: string } = {
-            ".c"   : `"${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" && ${dir}\\${noExt}`,
-            ".cpp" : `"${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" && "${dir}\\${noExt}"`,
-            ".java": `"${binPath.javac}" "${dir}\\${basename(document.fileName)}" && "${binPath.java}" "${dir}\\${basename(document.fileName)}"`,
+            ".c"   : `"${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} ${dir}\\${noExt}`,
+            ".cpp" : `"${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${dir}\\${noExt}"`,
+            ".java": `"${binPath.javac}" "${dir}\\${basename(document.fileName)}" ${divider} "${binPath.java}" "${dir}\\${basename(document.fileName)}"`,
             ".py"  : `"${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
             ".js"  : `"${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
             ".php" : `"${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
         }
-        
+        if(prefix){return prefix + runCmd[ext];}
         return  runCmd[ext];
     }
 
@@ -68,9 +70,6 @@ export function activate(context: vscode.ExtensionContext) {
             const fileName = document.fileName;
             vscode.commands.executeCommand("setContext", "dry-runner.running", true);
             await document.save();
-            // const fileBaseName = basename(fileName);
-            // const fileBaseNameWithoutExt = basename(fileName, extname(fileName)).replace(" ", "_");
-            // const fileDirectory = dirname(fileName);
             terminal = vscode.window.createTerminal({name: 'Dry Runner',});
             let command = getCommand(document) as string;
             terminal.sendText(command);
