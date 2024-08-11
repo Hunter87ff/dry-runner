@@ -1,11 +1,11 @@
 {
     "name": "dry-runner",
-    "displayName": "C/C+ Runner",
-    "description": "Run C/C++ code in one click.",
-    "version": "1.0.3",
-    "publisher": "Spruce87",
+    "displayName": "Dry Runner",
+    "description": "Run C,C++, Python, Java, PHP, Javascript code in one click.",
+    "version": "1.0.4",
+    "publisher": "SpruceExt",
     "author": {
-        "name": "hunter87"
+        "name": "Hunter87"
     },
     "license": "MIT",
     "homepage": "https://github.com/hunter87ff/dry-runner",
@@ -21,11 +21,15 @@
         "vscode": "^1.75.0"
     },
     "keywords": [
+        "dry-runner",
+        "run",
         "c",
         "cpp",
-        "run",
-        "c++",
-        "compile"
+        "javascript",
+        "php",
+        "python",
+        "java",
+        "path customizable code runner"
     ],
     "categories": [
         "Programming Languages",
@@ -54,10 +58,30 @@
         "configuration": {
             "title": "dry-runner",
             "properties": {
-                "dry-runner.compilerPath": {
+                "dry-runner.mingwPath": {
                     "type": "string",
-                    "default": "C:\\MinGW64\\bin",
+                    "default": "",
                     "description": "Compiler path for C/C++"
+                },
+                "dry-runner.jdkPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Java"
+                },
+                "dry-runner.pythonPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Python"
+                },
+                "dry-runner.phpPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for PHP"
+                },
+                "dry-runner.jsPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Javascript"
                 }
             }
         },
@@ -82,31 +106,31 @@
             "editor/title/run": [
                 {
                     "command": "dry-runner.run",
-                    "when": "editorLangId =~ /(c|cpp)/ && !dry-runner.running"
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && !dry-runner.running"
                 },
                 {
                     "command": "dry-runner.restart",
-                    "when": "editorLangId =~ /(c|cpp)/ && dry-runner.running"
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running"
                 },
                 {
                     "command": "dry-runner.stop",
-                    "when": "editorLangId =~ /(c|cpp)/ && dry-runner.running"
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running"
                 }
             ],
             "editor/context": [
                 {
                     "command": "dry-runner.run",
-                    "when": "editorLangId =~ /(c|cpp)/ && !dry-runner.running",
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && !dry-runner.running",
                     "group": "navigation"
                 },
                 {
                     "command": "dry-runner.restart",
-                    "when": "editorLangId =~ /(c|cpp)/ && dry-runner.running",
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running",
                     "group": "navigation"
                 },
                 {
                     "command": "dry-runner.stop",
-                    "when": "editorLangId =~ /(c|cpp)/ && dry-runner.running",
+                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running",
                     "group": "navigation"
                 }
             ]

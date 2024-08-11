@@ -4,27 +4,26 @@
 dry-runner extension is a tool that allows you to compile and run C/C++ code in vs code, with internal and external terminal.
 
 ## Features
-- Run C/C++ code with a single click
+- Run Run C,C++, Python, Java, PHP, Javascript code with a single click
 - Support Windows/Linux both
 - Customizable execution settings
 - Output display for easy debugging
-- Internal/External Terminal Support
 
 <!-- > [!IMPORTANT]  
 > This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress! -->
 
 ![installation](img/installation.gif)
 
-## Installation
-1. download vsix file from the latest release
-2. open vs code and click on extensions icon
-3. select install from VSIX
-4. select the vsix file that you've downloaded
+## Installation 
+1. Open VS code Extension section
+2. Search "dry-runner" from the search bar
+3. click on dry runner extension 
+3. click on install
 
 
 ## Usage
-1. Open a C/C++ file in your VS Code.
-2. To compile and run just click F5
+1. Open a supported file in your VS Code.
+2. To run just click F5
 3. You've Done
 
 ## Default Shortcut Key
