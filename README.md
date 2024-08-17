@@ -48,12 +48,16 @@ You can customize the behavior of the dry-runner extension by modifying the sett
 
 
 
-## Portables (Be Cautious!! )
+## Portables
 - Mingw64 : [Mingw](https://github.com/jonasstrandstedt/MinGW)
 - JDK-17.0.1 : [JDK-22](https://www.oracle.com/java/technologies/javase/jdk22-archive-downloads.html)
-- Python : 
-- Node :  
-- PHP : 
+- Python : [Python 3.10](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
+- Node :  [Node 18.18](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
+- PHP : [PHP 83.6](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
+
+> [!CAUTION]
+> Be cautious while downloading portables from these sites. don't download any other file(such as installer or executable) instead the portable you need!! else it won't work
+
 
 ## Contributing
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the dry-runner GitHub repository.
