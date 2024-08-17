@@ -24,8 +24,6 @@ export function activate(context: vscode.ExtensionContext) {
         if (path.includes("node")) {paths["node"] = path; }
         if (path.includes("php")) {paths["php"] = path; }
     });
-    const divider = utils.getDivider();
-    const prefix = divider === "&&"? null:"& ";
     const config = vscode.workspace.getConfiguration('dry-runner'); //package.json
     const mingwpath = config.get('mingwPath') || paths.mingw as string;
     const javapath = config.get('jdkPath') || paths.java as string;
@@ -36,6 +34,9 @@ export function activate(context: vscode.ExtensionContext) {
     let terminal: vscode.Terminal | undefined;
     
     function getCommand(document:vscode.TextDocument){
+        const divider = utils.getDivider();
+        const prefix = divider === "&&"? null:"& ";
+        
         let dir = dirname(document.fileName);
         let ext = extname(document.fileName).toString();
         let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_")
@@ -51,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
         let runCmd: { [key: string]: string } = {
             ".c"   : `"${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} ${dir}\\${noExt}`,
             ".cpp" : `"${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${dir}\\${noExt}"`,
-            ".java": `"cd ${dir} ${divider} ${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${basename(document.fileName)}"`,
+            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${basename(document.fileName).replace(".java","")}"`,
             ".py"  : `"${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
             ".js"  : `"${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
             ".php" : `"${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
