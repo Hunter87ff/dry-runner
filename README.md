@@ -19,6 +19,9 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 2. Search "dry-runner" from the search bar and install
 3. After successful installation you can customise executable path here!!
 3. Well You've done installation
+> [!NOTE]
+> The root class (which contains the main method as an entry point) must be same as the java file name!!
+> Otherwise it won't work!!
 
 
 ## Usage
