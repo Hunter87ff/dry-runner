@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
         let runCmd: { [key: string]: string } = {
             ".c"   : `"${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} ${dir}\\${noExt}`,
             ".cpp" : `"${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${dir}\\${noExt}"`,
-            ".java": `"${binPath.javac}" "${dir}\\${basename(document.fileName)}" ${divider} "${binPath.java}" "${dir}\\${basename(document.fileName)}"`,
+            ".java": `"cd $`{dir}` $`{divider}` ${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${basename(document.fileName)}"`,
             ".py"  : `"${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
             ".js"  : `"${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
             ".php" : `"${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
