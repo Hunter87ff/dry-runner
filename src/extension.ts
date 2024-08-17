@@ -50,12 +50,12 @@ export function activate(context: vscode.ExtensionContext) {
             php : `${phppath}\\php`,
         }
         let runCmd: { [key: string]: string } = {
-            ".c"   : `"${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} ${dir}\\${noExt}`,
-            ".cpp" : `"${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${dir}\\${noExt}"`,
-            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${basename(document.fileName).replace(".java","")}"`,
-            ".py"  : `"${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
-            ".js"  : `"${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
-            ".php" : `"${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
+            ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${noExt}"`,
+            ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${noExt}"`,
+            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
+            ".py"  : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
+            ".js"  : `cd "${dir}" ${divider} "${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
+            ".php" : `cd "${dir}" ${divider} "${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
         }
         if(prefix){return prefix + runCmd[ext];}
         return  runCmd[ext];
