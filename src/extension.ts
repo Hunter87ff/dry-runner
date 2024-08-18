@@ -42,11 +42,10 @@ export function activate(context: vscode.ExtensionContext) {
         try{
             const divider = utils.getDivider();
             const prefix = divider === "&&"? null:"& "; //prefix syntax for powershell
-            const psPathSpecifier = prefix? "./":""; //special executable path specifier for powershell
+            const psPathSpecifier = utils.getPathSpecifier() //special executable path specifier for powershell
             
             let dir = dirname(document.fileName) || fileUri;
             let ext = extname(document.fileName).toString() || extname(fileUri);
-            outputChannel.appendLine("Extension: " + ext);
             let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_");
             let binPath: { [key: string]: string } = {
                 c:  `${mingwpath}\\gcc`,

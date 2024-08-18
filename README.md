@@ -1,14 +1,15 @@
 # Dry Runner
 [![Run and Test TypeScript](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml/badge.svg?branch=main)](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml) ![Downloads](https://img.shields.io/visual-studio-marketplace/d/Spruce87.dry-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/Spruce87.dry-runner)
 ## Description
-dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript code in vs code, with integreted terminal.
+dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript,Kotlin,Batch script, Shell script and much more in vs code, with integreted terminal.
 
 ## Features
-- Run C,C++, Python, Java, PHP, Javascript code with a single click
+- Run C,C++, Python, Java, PHP, Javascript, Kotlin and many more with a single click
 - Support Windows/Linux both
 - Customizable execution path settings
 - Output display for easy debugging
-- 
+
+
 <!-- > [!IMPORTANT]  
 > This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress! -->
 
@@ -30,6 +31,17 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 2. To run just click F5(you can change through settings)
 3. You've Done
 
+## Supported Langs and Files
+- Java
+- C/C++
+- Kotlin
+- Python
+- Javascript
+- Shell Script
+- Batch Script
+- Jar Files
+- Java Class Files
+- Exe Files
 
 ## Default Shortcut Key
 - F5 : Start
