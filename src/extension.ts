@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
         try{
             const divider = utils.getDivider();
             const prefix = divider === "&&"? null:"& "; //prefix syntax for powershell
-            const psPathSpecifier = prefix? "./":null; //special executable path specifier for powershell
+            const psPathSpecifier = prefix? "./":""; //special executable path specifier for powershell
             
             let dir = dirname(document.fileName) || fileUri;
             let ext = extname(document.fileName).toString() || extname(fileUri);
