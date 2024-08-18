@@ -17,3 +17,12 @@ export function getDivider(): string {
     if(terminalType?.includes("powershell")){return ";&";}
     return "&&";
 }
+
+export function getFileUri() : string | undefined{
+    const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
+    let fileUri: string | undefined = undefined;
+    if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
+        fileUri = tabInput.uri.toString().replace("file:///", "").replace("%3A", ":");
+    }
+    return fileUri;
+}

@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "Dry Runner",
     "description": "Run C,C++, Python, Java, PHP, Javascript code in one click.",
-    "version": "1.0.61",
+    "version": "1.0.65",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -46,8 +46,8 @@
             },
             {
                 "command": "dry-runner.restart",
-                "title": "Restart",
-                "icon": "$(debug-restart)"
+                "title": "Run",
+                "icon": "$(debug-start)"
             },
             {
                 "command": "dry-runner.stop",
@@ -81,7 +81,12 @@
                 "dry-runner.jsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Compiler path for Javascript"
+                    "description": "Compiler path for NodeJS"
+                },
+                "dry-runner.ktPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Kotlin"
                 }
             }
         },
@@ -106,31 +111,27 @@
             "editor/title/run": [
                 {
                     "command": "dry-runner.run",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && !dry-runner.running"
+                    "when": "!dry-runner.running"
                 },
                 {
                     "command": "dry-runner.restart",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running"
-                },
-                {
-                    "command": "dry-runner.stop",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running"
+                    "when": "dry-runner.running"
                 }
             ],
             "editor/context": [
                 {
                     "command": "dry-runner.run",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && !dry-runner.running",
+                    "when": "!dry-runner.running",
                     "group": "navigation"
                 },
                 {
                     "command": "dry-runner.restart",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running",
+                    "when": "dry-runner.running",
                     "group": "navigation"
                 },
                 {
                     "command": "dry-runner.stop",
-                    "when": "editorLangId =~ /(c|cpp|java|python)/ && dry-runner.running",
+                    "when": "dry-runner.running",
                     "group": "navigation"
                 }
             ]

@@ -6,13 +6,14 @@ import * as utils from "./utils";
 let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
 let restartDisposable: vscode.Disposable;
-const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php'];
+const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php', '.kt', '.bat', '.exe', '.sh', '.ps1', '.pyz', '.jar', '.class'];
 let paths = {
     mingw: "",
     java: "",
     python: "",
     node : "",
     php : "",
+    kt : ""
 };
 
 export function activate(context: vscode.ExtensionContext) {
@@ -23,58 +24,83 @@ export function activate(context: vscode.ExtensionContext) {
         if (path.includes("python") && path.includes("scripts")!=true) {paths["python"] = path; }
         if (path.includes("node")) {paths["node"] = path; }
         if (path.includes("php")) {paths["php"] = path; }
+        if (path.includes("kotlinc")) {paths["kt"] = path; }
     });
+    
+    const outputChannel = vscode.window.createOutputChannel("Dry Runner");
     const config = vscode.workspace.getConfiguration('dry-runner'); //package.json
     const mingwpath = config.get('mingwPath') || paths.mingw as string;
     const javapath = config.get('jdkPath') || paths.java as string;
     const pythonpath = config.get('pythonPath') || paths.python as string;
     const nodepath = config.get('nodePath') || paths.node as string;
     const phppath = config.get('phpPath') || paths.php as string;
+    const ktcpath = config.get("ktPath");
     const isWin = process.platform === 'win32';
     let terminal: vscode.Terminal | undefined;
     
-    function getCommand(document:vscode.TextDocument){
-        const divider = utils.getDivider();
-        const prefix = divider === "&&"? null:"& ";
-        
-        let dir = dirname(document.fileName);
-        let ext = extname(document.fileName).toString();
-        let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_")
-        let binPath: { [key: string]: string } = {
-            c:  `${mingwpath}\\gcc`,
-            cpp: `${mingwpath}\\g++`,
-            javac: `${javapath}\\javac`,
-            java : `${javapath}\\java`,
-            py : `${pythonpath}\\python`,
-            js : `${nodepath}\\node`,
-            php : `${phppath}\\php`,
+    function getCommand(document:vscode.TextDocument, fileUri:string){
+        try{
+            const divider = utils.getDivider();
+            const prefix = divider === "&&"? null:"& "; //prefix syntax for powershell
+            const psPathSpecifier = prefix? "./":null; //special executable path specifier for powershell
+            
+            let dir = dirname(document.fileName) || fileUri;
+            let ext = extname(document.fileName).toString() || extname(fileUri);
+            outputChannel.appendLine("Extension: " + ext);
+            let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_");
+            let binPath: { [key: string]: string } = {
+                c:  `${mingwpath}\\gcc`,
+                cpp: `${mingwpath}\\g++`,
+                javac: `${javapath}\\javac`,
+                java : `${javapath}\\java`,
+                py : `${pythonpath}\\python`,
+                js : `${nodepath}\\node`,
+                php : `${phppath}\\php`,
+                kt : (isWin && ktcpath)? `${ktcpath}\\kotlinc.bat`: "kotlinc"
+            }
+            let runCmd: { [key: string]: string } = {
+                ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
+                ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
+                ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
+                ".py"  : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
+                ".js"  : `cd "${dir}" ${divider} "${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
+                ".php" : `cd "${dir}" ${divider} "${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
+                ".kt"  : `cd "${dir}" ${divider} "${binPath.kt}" "${dir}\\${basename(document.fileName)}" -include-runtime -d ${noExt}.jar ${divider} java -jar ${noExt}.jar`,
+                ".bat" : `cd "${dir}" ${divider} "${dir}\\${basename(document.fileName)}"`,
+                ".exe" : `cd "${dir}" ${divider} "${dir}\\${basename(fileUri, extname(fileUri))}.exe"`,
+                ".sh"  : `cd "${dir}" ${divider} "bash" "${dir}\\${basename(document.fileName)}"`,
+                ".ps1" : `cd "${dir}" ${divider} "powershell" "${dir}\\${basename(document.fileName)}"`,
+                ".pyz" : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
+                ".jar" : `cd "${dir}" ${divider} "java" -jar "${dir}\\${basename(fileUri, extname(fileUri))}.jar"`,
+                ".class":`cd "${dir}" ${divider} "java" "${basename(fileUri, extname(fileUri))}"`,
+            }
+            if(prefix){return prefix + runCmd[ext];}
+            return  runCmd[ext];
         }
-        let runCmd: { [key: string]: string } = {
-            ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${noExt}"`,
-            ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${noExt}"`,
-            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
-            ".py"  : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
-            ".js"  : `cd "${dir}" ${divider} "${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
-            ".php" : `cd "${dir}" ${divider} "${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
+        catch(err){
+            outputChannel.appendLine("Error: " + err);
         }
-        if(prefix){return prefix + runCmd[ext];}
-        return  runCmd[ext];
     }
 
     const run = async () => {
-        let document:vscode.TextDocument | undefined = undefined;
-        for (let textEditor of vscode.window.visibleTextEditors) {
-            const fileName = textEditor.document?.fileName || "";
-            if (extNames.includes(extname(fileName))){document = textEditor.document; }
-        }
-        if(document){
-            const fileName = document.fileName;
-            vscode.commands.executeCommand("setContext", "dry-runner.running", true);
-            await document.save();
-            terminal = vscode.window.createTerminal({name: 'Dry Runner',});
-            let command = getCommand(document) as string;
-            terminal.sendText(command);
-            terminal.show();
+        try{
+            let document = vscode.window.activeTextEditor?.document;
+            let fileUri = utils.getFileUri() || "";
+            outputChannel.appendLine("File URI: " + fileUri);
+            if (!extNames.includes(extname(fileUri))){ 
+                return vscode.window.showErrorMessage("Unsupported file type: " + extname(document?.fileName || ""));
+            }
+
+            if(document){
+                vscode.commands.executeCommand("setContext", "dry-runner.running", true);
+                await document.save();
+                terminal = vscode.window.createTerminal({name: 'Dry Runner',});
+                let command = getCommand(document, fileUri) as string;
+                terminal.sendText(command);
+                terminal.show();
+            }
+        }catch(err){
+            outputChannel.appendLine("Error: " + err);
         }
     };
     
@@ -86,8 +112,10 @@ export function activate(context: vscode.ExtensionContext) {
     restartDisposable = vscode.commands.registerCommand("dry-runner.restart", async () => {
       terminal?.dispose();
       run();
-    });  
+    }); 
+     
 }
+
 
 export function deactivate() {
     stopDisposable.dispose();
