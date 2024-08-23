@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-
+import { exec } from "child_process";
 
 export function getDefaultTerminalType(): string | undefined {
     const platform = process.platform;
@@ -33,3 +33,12 @@ export function getFileUri() : string | undefined{
     }
     return fileUri;
 }
+
+export const envSetup = async (outputChannel:vscode.OutputChannel, isWin:boolean) => {
+    if (!isWin) {return vscode.window.showErrorMessage("This feature is only available on Windows.");}
+    exec("rundll32.exe sysdm.cpl,EditEnvironmentVariables", (err, stdout, stderr) => {
+                if (err){outputChannel.appendLine(`Error: ${err.message}`);}
+                if(stdout){outputChannel.appendLine(`stdout: ${stdout}`);}
+                if(stderr){outputChannel.appendLine(`stderr: ${stderr}`);}
+        });
+    }

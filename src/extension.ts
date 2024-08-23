@@ -1,4 +1,5 @@
 // import { exec, spawn, spawnSync, execSync } from "child_process";
+import { exec } from 'child_process';
 import { basename, dirname, extname } from "path";
 import * as vscode from "vscode";
 import * as utils from "./utils";
@@ -6,7 +7,8 @@ import * as utils from "./utils";
 let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
 let restartDisposable: vscode.Disposable;
-const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php', '.kt', '.bat', '.exe', '.sh', '.ps1', '.pyz', '.jar', '.class'];
+let showEnvironment:  vscode.Disposable;
+const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php', '.kt', '.bat', '.exe', '.sh', '.ps1', '.pyz', '.jar', '.class']; //supported file extensions
 let paths = {
     mingw: "",
     java: "",
@@ -18,6 +20,10 @@ let paths = {
 
 export function activate(context: vscode.ExtensionContext) {
     const Env = process.env;
+    /* You might say why im accessing them one by one instead of whole to string?
+    So the problem is the path!! i won't get the simple executable bin path in that case. so thats why im checking one by one..
+    If you have any other optimized solution please don't forget to send a pull request..
+    Your contributions are much appriciated. Thanks*/
     Env.path?.toLowerCase().split(";").forEach(path => {
         if (path.includes("mingw")) {paths["mingw"] = path; }
         if (path.includes("jdk")) {paths["java"] = path; }
@@ -37,6 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
     const ktcpath = config.get("ktPath");
     const isWin = process.platform === 'win32';
     let terminal: vscode.Terminal | undefined;
+
     
     function getCommand(document:vscode.TextDocument, fileUri:string){
         try{
@@ -45,8 +52,8 @@ export function activate(context: vscode.ExtensionContext) {
             const psPathSpecifier = utils.getPathSpecifier() //special executable path specifier for powershell
             
             let dir = dirname(document.fileName) || fileUri;
-            let ext = extname(document.fileName).toString() || extname(fileUri);
-            let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_");
+            let ext = extname(document.fileName).toString() || extname(fileUri); 
+            let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_"); //just the file name without extension
             let binPath: { [key: string]: string } = {
                 c:  `${mingwpath}\\gcc`,
                 cpp: `${mingwpath}\\g++`,
@@ -102,17 +109,22 @@ export function activate(context: vscode.ExtensionContext) {
             outputChannel.appendLine("Error: " + err);
         }
     };
-    
+    const stop = async () => {
+        vscode.commands.executeCommand("setContext", "dry-runner.running", false);
+        terminal?.dispose();
+    }
+
+    const restart = async () => {
+        terminal?.dispose();
+        run();
+    }
+
+
+    // Registering Commands to the extension
     runDisposable = vscode.commands.registerCommand("dry-runner.run", run);
-    stopDisposable = vscode.commands.registerCommand("dry-runner.stop", () => {
-      vscode.commands.executeCommand("setContext", "dry-runner.running", false);
-      terminal?.dispose();});
-  
-    restartDisposable = vscode.commands.registerCommand("dry-runner.restart", async () => {
-      terminal?.dispose();
-      run();
-    }); 
-     
+    showEnvironment = vscode.commands.registerCommand("dry-runner.environ", async () => {utils.envSetup(outputChannel, isWin);});
+    stopDisposable = vscode.commands.registerCommand("dry-runner.stop", stop);
+    restartDisposable = vscode.commands.registerCommand("dry-runner.restart", restart); 
 }
 
 
@@ -120,4 +132,5 @@ export function deactivate() {
     stopDisposable.dispose();
     runDisposable.dispose();
     restartDisposable.dispose();
+    showEnvironment.dispose();
 }

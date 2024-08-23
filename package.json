@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "Dry Runner",
     "description": "Run C,C++, Python, Java, PHP, Javascript code in one click.",
-    "version": "1.0.67",
+    "version": "1.0.69",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -29,6 +29,7 @@
         "php",
         "python",
         "java",
+        "kotlin",
         "path customizable code runner"
     ],
     "categories": [
@@ -53,6 +54,11 @@
                 "command": "dry-runner.stop",
                 "title": "Stop",
                 "icon": "$(debug-stop)"
+            },
+            {
+                "command": "dry-runner.environ",
+                "title": "Set Environment",
+                "icon": "$(gear)"
             }
         ],
         "configuration": {
@@ -105,6 +111,10 @@
                 "command": "dry-runner.stop",
                 "when": "dry-runner.running",
                 "key": "f4"
+            },
+            {
+                "command": "dry-runner.environ",
+                "key": "ctrl+shift+f5"
             }
         ],
         "menus": {

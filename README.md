@@ -8,12 +8,13 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 - Support Windows/Linux both
 - Customizable execution path settings
 - Output display for easy debugging
+- You can setup system environment(user mode)
 
 
 <!-- > [!IMPORTANT]  
 > This extension is currently in early development/experimental stage. There are few of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress! -->
 
-![dev. installation](img/installation.gif)
+<!-- ![dev. installation](img/installation.gif) -->
 
 ## Installation 
 1. Open VS code Extension section
@@ -44,14 +45,10 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 - Exe Files
 
 ## Default Shortcut Key
-- F5 : Start
-- F5 : Restart
-- F4 : Stop and close terminal
-
-
-## Configuration
-You can customize the behavior of the dry-runner extension by modifying the settings. To access the settings, go to the preferences menu of your code editor and search for "dry-runner".
-
+- `F5` : Run Code
+- `F5` : Restart
+- `F4` : Stop and close terminal
+- `Ctrl`+`Shift`+`F5` : Customize Environment Path(if don't have admin rights)
 
 
 ## Don't have permission to change executable(AKA environment) path?
@@ -61,6 +58,11 @@ You can customize the behavior of the dry-runner extension by modifying the sett
 4. Paste the path to the extension settings -> executable path (jdk,mingw,python, node, php etc.)
 5. Restart vs code!! and done!!
 
+
+## Want to add path to system environment but don't have admin rights?
+1. Install dry runner on VS Code
+2. Click `Ctrl`+`Shift`+`F5` (Default Shortcut)
+3. Now you can change/add/delete system env path (user)
 
 
 ## Portables
