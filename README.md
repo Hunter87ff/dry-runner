@@ -67,7 +67,7 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 
 ## Portables
 - Mingw64 : [Mingw](https://github.com/jonasstrandstedt/MinGW)
-- JDK-17.0.1 : [JDK-22](https://www.oracle.com/java/technologies/javase/jdk22-archive-downloads.html)
+- JDK : [JDK-22](https://www.oracle.com/java/technologies/javase/jdk22-archive-downloads.html)
 - Python : [Python 3.10](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - Node :  [Node 18.18](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - PHP : [PHP 83.6](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
