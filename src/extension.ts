@@ -15,7 +15,8 @@ let paths = {
     python: "",
     node : "",
     php : "",
-    kt : ""
+    kt : "",
+    dart : ""
 };
 
 export function activate(context: vscode.ExtensionContext) {
