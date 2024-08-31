@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "Dry Runner",
     "description": "Run C,C++, Python, Java, PHP, Javascript code in one click.",
-    "version": "1.0.69",
+    "version": "1.0.7",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -93,6 +93,11 @@
                     "type": "string",
                     "default": "",
                     "description": "Compiler path for Kotlin"
+                },
+                "dry-runner.dartPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Dart"
                 }
             }
         },

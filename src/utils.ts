@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 import { exec } from "child_process";
+import * as configs from "./configs";
+import { basename, dirname, extname } from "path";
+
 
 export function getDefaultTerminalType(): string | undefined {
     const platform = process.platform;
@@ -34,11 +37,59 @@ export function getFileUri() : string | undefined{
     return fileUri;
 }
 
-export const envSetup = async (outputChannel:vscode.OutputChannel, isWin:boolean) => {
+export function getCommand(document:vscode.TextDocument, fileUri:string){
+    try{
+        const divider = getDivider();
+        const prefix = divider === "&&"? null:"& "; //prefix syntax for powershell
+        const psPathSpecifier = getPathSpecifier() //special executable path specifier for powershell
+        
+        let dir = dirname(document.fileName) || fileUri;
+        let ext = extname(document.fileName).toString() || extname(fileUri); 
+        let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_"); //just the file name without extension
+        let binPath: { [key: string]: string } = {
+            c:  `${configs.mingwpath}\\gcc`,
+            cpp: `${configs.mingwpath}\\g++`,
+            javac: `${configs.javapath}\\javac`,
+            java : `${configs.javapath}\\java`,
+            py : `${configs.pythonpath}\\python`,
+            js : `${configs.nodepath}\\node`,
+            php : `${configs.phppath}\\php`,
+            kt : (configs.isWin && configs.ktcpath)? `${configs.ktcpath}\\kotlinc.bat`: "kotlinc",
+            dart : `${configs.dartpath}\\dart`
+        }
+        let runCmd: { [key: string]: string } = {
+            ".sh"  : `cd "${dir}" ${divider} "bash" "${dir}\\${basename(document.fileName)}"`,
+            ".ps1" : `cd "${dir}" ${divider} "powershell" "${dir}\\${basename(document.fileName)}"`,
+            ".pyz" : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
+            ".jar" : `cd "${dir}" ${divider} "java" -jar "${dir}\\${basename(fileUri, extname(fileUri))}.jar"`,
+            ".bat" : `cd "${dir}" ${divider} "${dir}\\${basename(document.fileName)}"`,
+            ".exe" : `cd "${dir}" ${divider} "${dir}\\${basename(fileUri, extname(fileUri))}.exe"`,
+            ".class":`cd "${dir}" ${divider} "java" "${basename(fileUri, extname(fileUri))}"`,
+
+            ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
+            ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
+            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
+            ".py"  : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
+            ".js"  : `cd "${dir}" ${divider} "${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
+            ".php" : `cd "${dir}" ${divider} "${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
+            ".kt"  : `cd "${dir}" ${divider} "${binPath.kt}" "${dir}\\${basename(document.fileName)}" -include-runtime -d ${noExt}.jar ${divider} java -jar ${noExt}.jar`,
+            ".dart": `cd "${dir}" ${divider} "${binPath.dart}" "${dir}\\${basename(document.fileName)}"`,
+            ".ts"  : `cd "${dir}" ${divider} ts-node "${dir}\\${basename(document.fileName)}"`,
+        }
+        if(prefix){return prefix + runCmd[ext];}
+        return  runCmd[ext];
+    }
+    catch(err){
+        configs.outputChannel.appendLine("Error: " + err);
+    }
+}
+
+export async function envSetup(outputChannel:vscode.OutputChannel, isWin:boolean){
     if (!isWin) {return vscode.window.showErrorMessage("This feature is only available on Windows.");}
     exec("rundll32.exe sysdm.cpl,EditEnvironmentVariables", (err, stdout, stderr) => {
                 if (err){outputChannel.appendLine(`Error: ${err.message}`);}
                 if(stdout){outputChannel.appendLine(`stdout: ${stdout}`);}
                 if(stderr){outputChannel.appendLine(`stderr: ${stderr}`);}
-        });
-    }
+    });
+}
+

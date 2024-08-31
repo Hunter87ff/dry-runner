@@ -1,7 +1,7 @@
 # Dry Runner
 [![Run and Test TypeScript](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml/badge.svg?branch=main)](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml) ![Downloads](https://img.shields.io/visual-studio-marketplace/d/Spruce87.dry-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/Spruce87.dry-runner)
 ## Description
-dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript,Kotlin,Batch script, Shell script and much more in vs code, with integreted terminal.
+dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin,Batch script, Shell script and much more in vs code, with integreted terminal.
 
 ## Features
 - Run C,C++, Python, Java, PHP, Javascript, Kotlin and many more with a single click
@@ -38,9 +38,11 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 ## Supported Langs and Files
 - Java
 - C/C++
+- Dart
 - Kotlin
 - Python
 - Javascript
+- TypeScript
 - Shell Script
 - Batch Script
 - Jar Files
@@ -68,15 +70,13 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 3. Now you can change/add/delete system env path (user)
 
 
-## Portables
-- Mingw64 : [Mingw](https://github.com/jonasstrandstedt/MinGW)
+## Portables(Windows Supported)
 - JDK : [JDK-22](https://www.oracle.com/java/technologies/javase/jdk22-archive-downloads.html)
 - Python : [Python 3.10](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - Node :  [Node 18.18](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - PHP : [PHP 83.6](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
-
-> [!CAUTION]
-> Be cautious while downloading portables from these sites. don't download any other file(such as installer or executable) instead the portable you need!! else it won't work
+- Dart Sdk : [Dart SDK v3.5.1](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.7)
+- MinGW : [MinGW64](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.7) 
 
 
 ## Contributing
