@@ -76,8 +76,8 @@ dry-runner extension is a tool that allows you to compile and run C,C++, Python,
 - Python : [Python 3.10](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - Node :  [Node 18.18](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
 - PHP : [PHP 83.6](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.6)
-- Dart Sdk : [Dart SDK v3.5.1](https://github.com/Hunter87ff/dry-runner/releases/tag/v1.0.71)
-- MinGW : [MinGW64](https://github.com/Hunter87ff/dry-runner/releases/tag/v1.0.71) 
+- Dart Sdk : [Dart SDK v3.5.1](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.71)
+- MinGW : [MinGW64](https://github.com/Hunter87ff/dry-runner/releases/tag/1.0.71) 
 
 
 ## Contributing
