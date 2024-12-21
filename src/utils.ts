@@ -55,7 +55,8 @@ export function getCommand(document:vscode.TextDocument, fileUri:string){
             js : `${configs.nodepath}\\node`,
             php : `${configs.phppath}\\php`,
             kt : (configs.isWin && configs.ktcpath)? `${configs.ktcpath}\\kotlinc.bat`: "kotlinc",
-            dart : `${configs.dartpath}\\dart`
+            dart : `${configs.dartpath}\\dart`,
+            go : `${configs.gopath}\\go`,
         }
         let runCmd: { [key: string]: string } = {
             ".sh"  : `cd "${dir}" ${divider} "bash" "${dir}\\${basename(document.fileName)}"`,
@@ -75,6 +76,7 @@ export function getCommand(document:vscode.TextDocument, fileUri:string){
             ".kt"  : `cd "${dir}" ${divider} "${binPath.kt}" "${dir}\\${basename(document.fileName)}" -include-runtime -d ${noExt}.jar ${divider} java -jar ${noExt}.jar`,
             ".dart": `cd "${dir}" ${divider} "${binPath.dart}" "${dir}\\${basename(document.fileName)}"`,
             ".ts"  : `cd "${dir}" ${divider} ts-node "${dir}\\${basename(document.fileName)}"`,
+            ".go"  : `cd "${dir}" ${divider} "${binPath.go}" run "${dir}\\${basename(document.fileName)}"`,
         }
         if(prefix){return prefix + runCmd[ext];}
         return  runCmd[ext];

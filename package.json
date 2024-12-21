@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "Dry Runner",
     "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin code in one click.",
-    "version": "1.0.71",
+    "version": "1.0.72",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -98,6 +98,11 @@
                     "type": "string",
                     "default": "",
                     "description": "Compiler path for Dart"
+                },
+                "dry-runner.goPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler path for Go"
                 }
             }
         },
@@ -153,6 +158,7 @@
         }
     },
     "scripts": {
+        "build" : "vsce package",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",

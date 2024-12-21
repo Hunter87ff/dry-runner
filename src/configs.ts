@@ -1,6 +1,6 @@
 import {window, workspace} from 'vscode';
 
-export const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php', '.kt', '.bat', '.exe', '.sh', '.ps1', '.pyz', '.jar', '.class', '.dart', '.ts']; //supported file extensions
+export const extNames = ['.c', '.cpp', '.java', '.py', '.js', '.php', '.kt', '.bat', '.exe', '.sh', '.ps1', '.pyz', '.jar', '.class', '.dart', '.ts', '.go']; //supported file extensions
 let paths = {
     mingw: "",
     java: "",
@@ -8,7 +8,8 @@ let paths = {
     node : "",
     php : "",
     kt : "",
-    dart : ""
+    dart : "",
+    go : ""
 };
 
 const Env = process.env;
@@ -24,6 +25,7 @@ Env.path?.toLowerCase().split(";").forEach(path => {
     if (path.includes("php")) {paths["php"] = path; }
     if (path.includes("kotlinc")) {paths["kt"] = path; }
     if (path.includes("dart")) {paths["dart"] = path; }
+    if (path.includes("go")) {paths["go"] = path; }
 });
 
 export const isWin = process.platform === 'win32';
@@ -36,3 +38,4 @@ export const nodepath = core.get('nodePath') || paths.node as string;
 export const phppath = core.get('phpPath') || paths.php as string;
 export const ktcpath = core.get("ktPath") || paths.kt as string;
 export const dartpath = core.get("dartPath") || paths.dart as string;
+export const gopath = core.get("goPath") || paths.go as string;
