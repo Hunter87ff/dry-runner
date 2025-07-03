@@ -22,6 +22,13 @@ export function getPathSpecifier(): string | undefined {
     return "";
 }
 
+/*
+this could be implimented in a better way, but this works for now
+ps   : cd "d:\github\dry-runner\test\" ; if ($?) { g++ test.cpp -o test } ; if ($?) { .\test }
+cmd  : cd "d:\github\dry-runner\test\" && g++ test.cpp -o test && "d:\github\dry-runner\test\"test
+bash : cd "d:\github\dry-runner\test\" && g++ test.cpp -o test && "d:\github\dry-runner\test\"test
+*/
+
 export function getDivider(): string {
     const terminalType = getDefaultTerminalType();
     if(terminalType?.includes("powershell")){return ";&";}
@@ -59,6 +66,7 @@ export function getCommand(document:vscode.TextDocument, fileUri:string){
             go : `${configs.gopath}\\go`,
         }
         let runCmd: { [key: string]: string } = {
+            // Executable files
             ".sh"  : `cd "${dir}" ${divider} "bash" "${dir}\\${basename(document.fileName)}"`,
             ".ps1" : `cd "${dir}" ${divider} "powershell" "${dir}\\${basename(document.fileName)}"`,
             ".pyz" : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
@@ -67,6 +75,7 @@ export function getCommand(document:vscode.TextDocument, fileUri:string){
             ".exe" : `cd "${dir}" ${divider} "${dir}\\${basename(fileUri, extname(fileUri))}.exe"`,
             ".class":`cd "${dir}" ${divider} "java" "${basename(fileUri, extname(fileUri))}"`,
 
+            // Compilation and execution commands
             ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
             ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
             ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
