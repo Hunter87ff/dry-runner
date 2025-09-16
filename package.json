@@ -2,7 +2,7 @@
     "name": "dry-runner",
     "displayName": "Dry Runner",
     "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin code in one click.",
-    "version": "1.0.8",
+    "version": "1.0.80",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
