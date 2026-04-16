@@ -1,7 +1,8 @@
-import { basename, dirname, extname } from "path";
 import * as vscode from "vscode";
-import * as utils from "./utils";
-import * as configs from "./configs";
+import utils from "./utils";
+import  configs from "./configs";
+import commands from "./commands";
+
 // let extensionUri: vscode.Uri;
 let stopDisposable: vscode.Disposable;
 let runDisposable: vscode.Disposable;
@@ -11,37 +12,16 @@ let showEnvironment:  vscode.Disposable;
 
 export function activate(context: vscode.ExtensionContext) {
     let terminal: vscode.Terminal | undefined;
-    const run = async () => {
-        try{
-            let document = vscode.window.activeTextEditor?.document;
-            let fileUri = utils.getFileUri() || "";
-            configs.outputChannel.appendLine("File URI: " + fileUri);
-            if (!configs.extNames.includes(extname(fileUri))){ 
-                return vscode.window.showErrorMessage("Unsupported file type: " + extname(document?.fileName || ""));
-            }
-            else if(document){
-                vscode.commands.executeCommand("setContext", "dry-runner.running", true);
-                await document.save();
-                terminal = vscode.window.createTerminal({name: 'Dry Runner',});
-                let command = utils.getCommand(document, fileUri) as string;
-                terminal.sendText(command);
-                terminal.show();
-            }
-        }
-        catch(err){
-            configs.outputChannel.appendLine("Error: " + err);
-            configs.outputChannel.show();
-        }
-    };
+    const run = async () => commands.run(terminal!);
 
     const stop = async () => {
-        vscode.commands.executeCommand("setContext", "dry-runner.running", false);
-        terminal?.dispose();
+        commands.stop(terminal!);
+        terminal = undefined;
     }
 
     const restart = async () => {
         terminal?.dispose();
-        run();
+        commands.restart(terminal!);
     }
 
     const sysEnv = async () => {

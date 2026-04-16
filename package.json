@@ -64,45 +64,26 @@
         "configuration": {
             "title": "dry-runner",
             "properties": {
-                "dry-runner.mingwPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for C/C++"
-                },
-                "dry-runner.jdkPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Java"
-                },
-                "dry-runner.pythonPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Python"
-                },
-                "dry-runner.phpPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for PHP"
-                },
-                "dry-runner.jsPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for NodeJS"
-                },
-                "dry-runner.ktPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Kotlin"
-                },
-                "dry-runner.dartPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Dart"
-                },
-                "dry-runner.goPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Go"
+                "dry-runner.commands": {
+                    "type": "object",
+                    "scope": "window",
+                    "default": {
+                        "js": "cd {workspace} && node {filename}",
+                        "py": "cd {workspace} && python {filename}",
+                        "ts": "cd {workspace} && ts-node {filename}",
+                        "java": "cd {workspace} && javac {filename} && java {filenameNoExt}",
+                        "c": "cd {workspace} && gcc {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}",
+                        "cpp": "cd {workspace} && g++ {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}",
+                        "php": "cd {workspace} && php {filename}",
+                        "dart": "cd {workspace} && dart {filename}",
+                        "kt": "cd {workspace} && kotlinc {filename} -include-runtime -d {filenameNoExt}.jar && java -jar {workspace}/{filenameNoExt}.jar",
+                        "go": "cd {workspace} && go run {filename}",
+                        "rs": "cd {workspace} && rustc {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}"
+                    },
+                    "additionalProperties": {
+                        "type": "boolean"
+                    },
+                    "markdownDescription": "Customize the command for different languages. You can use `{filename}` and `{workspace}` as placeholders for the current file name and workspace path. If you set a language to `false`, the run button will be hidden for that language."
                 }
             }
         },
@@ -168,15 +149,22 @@
     },
     "devDependencies": {
         "@types/glob": "^7.1.4",
+        "@types/minimatch": "^6.0.0",
         "@types/mocha": "^9.0.0",
         "@types/node": "14.x",
         "@types/vscode": "^1.63.0",
         "@typescript-eslint/eslint-plugin": "^5.1.0",
         "@typescript-eslint/parser": "^5.1.0",
-        "@vscode/test-electron": "^1.6.2",
+        "@vscode/test-electron": "^2.5.2",
         "eslint": "^8.1.0",
         "glob": "^7.1.7",
         "mocha": "^11.1.0",
         "typescript": "^4.9.5"
+    },
+    "overrides": {
+        "mocha": {
+            "diff": "8.0.3",
+            "serialize-javascript": "7.0.5"
+        }
     }
 }
