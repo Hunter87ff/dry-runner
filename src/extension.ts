@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import utils from "./utils";
-import  configs from "./configs";
 import commands from "./commands";
 
 // let extensionUri: vscode.Uri;
@@ -11,28 +10,12 @@ let showEnvironment:  vscode.Disposable;
 
 
 export function activate(context: vscode.ExtensionContext) {
-    let terminal: vscode.Terminal | undefined;
-    const run = async () => commands.run(terminal!);
-
-    const stop = async () => {
-        commands.stop(terminal!);
-        terminal = undefined;
-    }
-
-    const restart = async () => {
-        terminal?.dispose();
-        commands.restart(terminal!);
-    }
-
-    const sysEnv = async () => {
-        utils.envSetup(configs.outputChannel, configs.isWin);
-    }
 
     // Registering Commands to the extension
-    runDisposable = vscode.commands.registerCommand("dry-runner.run", run);
-    showEnvironment = vscode.commands.registerCommand("dry-runner.environ", sysEnv);
-    stopDisposable = vscode.commands.registerCommand("dry-runner.stop", stop);
-    restartDisposable = vscode.commands.registerCommand("dry-runner.restart", restart); 
+    runDisposable = vscode.commands.registerCommand("dry-runner.run", commands.run);
+    showEnvironment = vscode.commands.registerCommand("dry-runner.environ", utils.envSetup);
+    stopDisposable = vscode.commands.registerCommand("dry-runner.stop", commands.stop);
+    restartDisposable = vscode.commands.registerCommand("dry-runner.restart", commands.restart); 
 }
 
 

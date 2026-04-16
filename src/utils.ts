@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { exec } from "child_process";
 import configs from "./configs";
 import { basename, dirname, extname } from "path";
-import { config } from "process";
 
 
 
@@ -10,6 +9,26 @@ export default class Utils {
 
 
     static placeholders = {
+        '{filepath}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return fileUri;
+        },
+        'filepathNoExt': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return fileUri.replace(extname(fileUri), '');
+        },
         '{filename}': () => {
             const fileUri = Utils.getFileUri();
             if (!fileUri) {
@@ -79,7 +98,7 @@ export default class Utils {
         const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
         let fileUri: string | undefined = undefined;
         if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
-            fileUri = tabInput.uri.toString().replace("file:///", "").replace("%3A", ":").replace("%20", " ");
+            fileUri = tabInput.uri.fsPath;
         }
         return fileUri;
     }
@@ -93,6 +112,16 @@ export default class Utils {
     }
 
 
+    static getTerminal(name: string=configs.name): vscode.Terminal{
+        const terminals = vscode.window.terminals;
+        let _terminal = terminals.find(terminal => terminal.name === name);
+        if (!_terminal) {
+            _terminal = vscode.window.createTerminal({ name });
+        }
+        return _terminal;
+    }
+
+
     static getCommand() {
         const file = Utils.getFileUri();
         if (!file) {
@@ -102,8 +131,17 @@ export default class Utils {
             return '';
         }
         const ext = extname(file).replace('.', '');
-        const commandTemplate = configs.core.get<string>(ext);
-        configs.outputChannel.appendLine(`Command for ${ext}: ${commandTemplate}`);
+        const commands = configs.core.get<Record<string, string>>("commands");
+
+        if (!commands) {
+            vscode.window.showErrorMessage(
+                "No commands configured."
+            );
+            return '';
+        }
+
+        const commandTemplate = commands![ext];
+        
         if (!commandTemplate) {
             vscode.window.showErrorMessage(
                 `No command configured for ${ext} files.`
@@ -114,17 +152,17 @@ export default class Utils {
     }
 
 
-    static async envSetup(outputChannel: vscode.OutputChannel, isWin: boolean) {
-        if (!isWin) {
+    static async envSetup() {
+        if (!configs.isWin) {
             vscode.window.showErrorMessage(
-                "This feature is only available on Windows."
+                `Environment management is only for Windows users with no admin permissions!!`
             );
             return;
         }
         exec("rundll32.exe sysdm.cpl,EditEnvironmentVariables", (err, stdout, stderr) => {
-            if (err) { outputChannel.appendLine(`Error: ${err.message}`); }
-            if (stdout) { outputChannel.appendLine(`stdout: ${stdout}`); }
-            if (stderr) { outputChannel.appendLine(`stderr: ${stderr}`); }
+            if (err) { configs.outputChannel.appendLine(`Error: ${err.message}`); }
+            if (stdout) { configs.outputChannel.appendLine(`stdout: ${stdout}`); }
+            if (stderr) { configs.outputChannel.appendLine(`stderr: ${stderr}`); }
         });
     }
 

@@ -1,8 +1,8 @@
 {
     "name": "dry-runner",
     "displayName": "Dry Runner",
-    "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin code in one click.",
-    "version": "1.0.80",
+    "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin and many more in one click.",
+    "version": "1.1.0",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -68,22 +68,30 @@
                     "type": "object",
                     "scope": "window",
                     "default": {
-                        "js": "cd {workspace} && node {filename}",
-                        "py": "cd {workspace} && python {filename}",
-                        "ts": "cd {workspace} && ts-node {filename}",
-                        "java": "cd {workspace} && javac {filename} && java {filenameNoExt}",
-                        "c": "cd {workspace} && gcc {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}",
-                        "cpp": "cd {workspace} && g++ {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}",
-                        "php": "cd {workspace} && php {filename}",
-                        "dart": "cd {workspace} && dart {filename}",
-                        "kt": "cd {workspace} && kotlinc {filename} -include-runtime -d {filenameNoExt}.jar && java -jar {workspace}/{filenameNoExt}.jar",
-                        "go": "cd {workspace} && go run {filename}",
-                        "rs": "cd {workspace} && rustc {filename} -o {filenameNoExt} && {workspace}/{filenameNoExt}"
+                        "js": "cd {workspace} && node {filepath}",
+                        "py": "cd {workspace} && python {filepath}",
+                        "ts": "cd {workspace} && ts-node {filepath}",
+                        "php": "cd {workspace} && php {filepath}",
+                        "dart": "cd {workspace} && dart {filepath}",
+                        "go": "cd {workspace} && go run {filepath}",
+                        "sh": "cd {workspace} && bash {filepath}",
+                        "rb": "cd {workspace} && ruby {filepath}",
+                        "swift": "cd {workspace} && swift {filepath}",
+                        "lua": "cd {workspace} && lua {filepath}",
+                        "pl": "cd {workspace} && perl {filepath}",
+                        "r": "cd {workspace} && Rscript {filepath}",
+                        "scala": "cd {workspace} && scalac {filepath} && scala {filenameNoExt}",
+                        "java": "cd {workspace} && javac {filepath} && java {filenameNoExt}",
+                        "c": "cd {workspace} && gcc {filepath} -o {filenameNoExt} && {filepathNoExt}",
+                        "cpp": "cd {workspace} && g++ {filepath} -o {filenameNoExt} && {filepathNoExt}",
+                        "cs": "cd {workspace} && csc {filepath} -out:{filenameNoExt}.exe && {filepathNoExt}.exe",
+                        "rs": "cd {workspace} && rustc {filepath} -o {filenameNoExt} && {filepathNoExt}",
+                        "kt": "cd {workspace} && kotlinc {filepath} -include-runtime -d {filenameNoExt}.jar && java -jar {filepathNoExt}.jar"
                     },
                     "additionalProperties": {
-                        "type": "boolean"
+                        "type": "string"
                     },
-                    "markdownDescription": "Customize the command for different languages. You can use `{filename}` and `{workspace}` as placeholders for the current file name and workspace path. If you set a language to `false`, the run button will be hidden for that language."
+                    "markdownDescription": "Customize the command for different languages. some placeholders : `{workspace}`, `{filepath}`, `{filename}`, `{filenameNoExt}`"
                 }
             }
         },

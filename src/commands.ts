@@ -5,7 +5,7 @@ import utils from './utils';
 
 export default class Commands {
 
-    static async run(terminal: vscode.Terminal) {
+    static async run() {
         try {
             let document = vscode.window.activeTextEditor?.document;
             let fileUri = utils.getFileUri() || "";
@@ -16,7 +16,7 @@ export default class Commands {
             else if (document) {
                 vscode.commands.executeCommand("setContext", "dry-runner.running", true);
                 await document.save();
-                terminal = vscode.window.createTerminal({ name: 'Dry Runner', });
+                const terminal = utils.getTerminal();
                 terminal.sendText(command);
                 terminal.show();
             }
@@ -28,13 +28,15 @@ export default class Commands {
     };
 
 
-    static async stop(terminal: vscode.Terminal) {
+    static async stop() {
         vscode.commands.executeCommand("setContext", "dry-runner.running", false);
+        const terminal = utils.getTerminal();
         terminal?.dispose();
     }
 
-    static async restart(terminal: vscode.Terminal) {
+    static async restart() {
+        const terminal = utils.getTerminal();
         terminal?.dispose();
-        Commands.run(terminal);
+        Commands.run();
     }
 }
