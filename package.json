@@ -82,11 +82,16 @@
                         "r": "cd {workspace} && Rscript {filepath}",
                         "scala": "cd {workspace} && scalac {filepath} && scala {filenameNoExt}",
                         "java": "cd {workspace} && javac {filepath} && java {filenameNoExt}",
-                        "c": "cd {workspace} && gcc {filepath} -o {filenameNoExt} && {filepathNoExt}",
-                        "cpp": "cd {workspace} && g++ {filepath} -o {filenameNoExt} && {filepathNoExt}",
-                        "cs": "cd {workspace} && csc {filepath} -out:{filenameNoExt}.exe && {filepathNoExt}.exe",
-                        "rs": "cd {workspace} && rustc {filepath} -o {filenameNoExt} && {filepathNoExt}",
-                        "kt": "cd {workspace} && kotlinc {filepath} -include-runtime -d {filenameNoExt}.jar && java -jar {filepathNoExt}.jar"
+                        "c": "cd {filedir} && gcc {filename} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "cpp": "cd {filedir} && g++ {filepath} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "cs": "cd {workspace} && csc {filepath} -out:{filenameNoExt}.exe && ./{filenameNoExt}.exe",
+                        "rs": "cd {workspace} && rustc {filepath} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "kt": "cd {workspace} && kotlinc {filepath} -include-runtime -d {filenameNoExt}.jar && java -jar {filepathNoExt}.jar",
+                        "exe" : "cd {filedir} && {filename}",
+                        "bat" : "cd {filedir} && {filename}",
+                        "ps1" : "cd {filedir} && powershell -ExecutionPolicy Bypass -File {filename}",
+                        "cmd" : "cd {filedir} && {filename}",
+                        "" : "cd {filedir} && {filename}"
                     },
                     "additionalProperties": {
                         "type": "string"

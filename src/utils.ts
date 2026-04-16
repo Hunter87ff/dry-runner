@@ -19,7 +19,7 @@ export default class Utils {
             }
             return fileUri;
         },
-        'filepathNoExt': () => {
+        '{filepathNoExt}': () => {
             const fileUri = Utils.getFileUri();
             if (!fileUri) {
                 vscode.window.showErrorMessage(
@@ -106,12 +106,13 @@ export default class Utils {
     static replacePlaceholders(command: string): string {
         let result = command;
         for (const [placeholder, func] of Object.entries(Utils.placeholders)) {
-            result = result.replace(new RegExp(placeholder, 'g'), func());
+            const esc = placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            result = result.replace(new RegExp(esc, 'g'), func());
         }
         return result;
     }
 
-
+    
     static getTerminal(name: string=configs.name): vscode.Terminal{
         const terminals = vscode.window.terminals;
         let _terminal = terminals.find(terminal => terminal.name === name);
