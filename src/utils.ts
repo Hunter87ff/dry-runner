@@ -1,106 +1,170 @@
 import * as vscode from "vscode";
 import { exec } from "child_process";
-import * as configs from "./configs";
+import configs from "./configs";
 import { basename, dirname, extname } from "path";
 
 
-export function getDefaultTerminalType(): string | undefined {
-    const platform = process.platform;
-    let defaultProfileSetting = '';
-    if (platform.includes('win32')) {defaultProfileSetting = 'terminal.integrated.defaultProfile.windows';} 
-    else if (platform === 'linux') {defaultProfileSetting = 'terminal.integrated.defaultProfile.linux';}
-    else if (platform === 'darwin') {defaultProfileSetting = 'terminal.integrated.defaultProfile.osx';}
-    const defaultProfile = vscode.workspace.getConfiguration().get<string>(defaultProfileSetting);
-    // vscode.window.showInformationMessage(`Default Profile: ${defaultProfile}`);
-    if (defaultProfile) {return defaultProfile.toLowerCase();}
-    return "powershell";
-}
 
-export function getPathSpecifier(): string | undefined {
-    const defaultProfile = getDefaultTerminalType();
-    if (defaultProfile?.includes("powershell") || defaultProfile?.includes("bash")) {return "./";}
-    return "";
-}
+export default class Utils {
 
-/*
-this could be implimented in a better way, but this works for now
-ps   : cd "d:\github\dry-runner\test\" ; if ($?) { g++ test.cpp -o test } ; if ($?) { .\test }
-cmd  : cd "d:\github\dry-runner\test\" && g++ test.cpp -o test && "d:\github\dry-runner\test\"test
-bash : cd "d:\github\dry-runner\test\" && g++ test.cpp -o test && "d:\github\dry-runner\test\"test
-*/
 
-export function getDivider(): string {
-    const terminalType = getDefaultTerminalType();
-    if(terminalType?.includes("powershell")){return ";&";}
-    return "&&";
-}
-
-export function getFileUri() : string | undefined{
-    const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
-    let fileUri: string | undefined = undefined;
-    if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
-        fileUri = tabInput.uri.toString().replace("file:///", "").replace("%3A", ":").replace("%20", " ");
+    static placeholders = {
+        '{filepath}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return fileUri;
+        },
+        '{filepathNoExt}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return fileUri.replace(extname(fileUri), '');
+        },
+        '{filename}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return basename(fileUri);
+        },
+        '{workspace}': () => {
+            const workspaceFolders = vscode.workspace.workspaceFolders;
+            if (!workspaceFolders || workspaceFolders.length === 0) {
+                vscode.window.showErrorMessage(
+                    "No workspace folder found."
+                );
+                return '';
+            }
+            return workspaceFolders[0].uri.fsPath;
+        },
+        '{filedir}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return dirname(fileUri);
+        },
+        '{filenameNoExt}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return basename(fileUri, extname(fileUri));
+        },
+        '{ext}': () => {
+            const fileUri = Utils.getFileUri();
+            if (!fileUri) {
+                vscode.window.showErrorMessage(
+                    "No active file found."
+                );
+                return '';
+            }
+            return extname(fileUri);
+        },
     }
-    return fileUri;
-}
+    
+    static getDefaultTerminalType(): string | undefined {
+        const platform = process.platform;
+        let defaultProfileSetting = '';
+        if (platform.includes('win32')) { defaultProfileSetting = 'terminal.integrated.defaultProfile.windows'; }
+        else if (platform === 'linux') { defaultProfileSetting = 'terminal.integrated.defaultProfile.linux'; }
+        else if (platform === 'darwin') { defaultProfileSetting = 'terminal.integrated.defaultProfile.osx'; }
+        const defaultProfile = vscode.workspace.getConfiguration().get<string>(defaultProfileSetting);
+        // vscode.window.showInformationMessage(`Default Profile: ${defaultProfile}`);
+        if (defaultProfile) { return defaultProfile.toLowerCase(); }
+        return "powershell";
+    }
 
-export function getCommand(document:vscode.TextDocument, fileUri:string){
-    try{
-        const divider = getDivider();
-        const prefix = divider === "&&"? null:"& "; //prefix syntax for powershell
-        const psPathSpecifier = getPathSpecifier() //special executable path specifier for powershell
+
+    static getFileUri(): string | undefined {
+        const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
+        let fileUri: string | undefined = undefined;
+        if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
+            fileUri = tabInput.uri.fsPath;
+        }
+        return fileUri;
+    }
+
+    static replacePlaceholders(command: string): string {
+        let result = command;
+        for (const [placeholder, func] of Object.entries(Utils.placeholders)) {
+            const esc = placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            result = result.replace(new RegExp(esc, 'g'), func());
+        }
+        return result;
+    }
+
+    
+    static getTerminal(name: string=configs.name): vscode.Terminal{
+        const terminals = vscode.window.terminals;
+        let _terminal = terminals.find(terminal => terminal.name === name);
+        if (!_terminal) {
+            _terminal = vscode.window.createTerminal({ name });
+        }
+        return _terminal;
+    }
+
+
+    static getCommand() {
+        const file = Utils.getFileUri();
+        if (!file) {
+            vscode.window.showErrorMessage(
+                "No active file found."
+            );
+            return '';
+        }
+        const ext = extname(file).replace('.', '');
+        const commands = configs.core.get<Record<string, string>>("commands");
+
+        if (!commands) {
+            vscode.window.showErrorMessage(
+                "No commands configured."
+            );
+            return '';
+        }
+
+        const commandTemplate = commands![ext];
         
-        let dir = dirname(document.fileName) || fileUri;
-        let ext = extname(document.fileName).toString() || extname(fileUri); 
-        let noExt = basename(document.fileName, extname(document.fileName)).replace(" ", "_") || basename(fileUri, extname(fileUri)).replace(" ", "_"); //just the file name without extension
-        let binPath: { [key: string]: string } = {
-            c:  `${configs.mingwpath}\\gcc`,
-            cpp: `${configs.mingwpath}\\g++`,
-            javac: `${configs.javapath}\\javac`,
-            java : `${configs.javapath}\\java`,
-            py : `${configs.pythonpath}\\python`,
-            js : `${configs.nodepath}\\node`,
-            php : `${configs.phppath}\\php`,
-            kt : (configs.isWin && configs.ktcpath)? `${configs.ktcpath}\\kotlinc.bat`: "kotlinc",
-            dart : `${configs.dartpath}\\dart`,
-            go : `${configs.gopath}\\go`,
+        if (!commandTemplate) {
+            vscode.window.showErrorMessage(
+                `No command configured for ${ext} files.`
+            );
+            return '';
         }
-        let runCmd: { [key: string]: string } = {
-            // Executable files
-            ".sh"  : `cd "${dir}" ${divider} "bash" "${dir}\\${basename(document.fileName)}"`,
-            ".ps1" : `cd "${dir}" ${divider} "powershell" "${dir}\\${basename(document.fileName)}"`,
-            ".pyz" : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
-            ".jar" : `cd "${dir}" ${divider} "java" -jar "${dir}\\${basename(fileUri, extname(fileUri))}.jar"`,
-            ".bat" : `cd "${dir}" ${divider} "${dir}\\${basename(document.fileName)}"`,
-            ".exe" : `cd "${dir}" ${divider} "${dir}\\${basename(fileUri, extname(fileUri))}.exe"`,
-            ".class":`cd "${dir}" ${divider} "java" "${basename(fileUri, extname(fileUri))}"`,
+        return Utils.replacePlaceholders(commandTemplate);
+    }
 
-            // Compilation and execution commands
-            ".c"   : `cd "${dir}" ${divider} "${binPath.c}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
-            ".cpp" : `cd "${dir}" ${divider} "${binPath.cpp}" "${dir}\\${basename(document.fileName)}" -o "${dir}\\${noExt}" ${divider} "${psPathSpecifier}${noExt}"`,
-            ".java": `cd "${dir}" ${divider} "${binPath.javac}" "${basename(document.fileName)}" ${divider} "${binPath.java}" "${noExt}"`,
-            ".py"  : `cd "${dir}" ${divider} "${binPath.py}" "${dir}\\${basename(document.fileName)}"`,
-            ".js"  : `cd "${dir}" ${divider} "${binPath.js}" "${dir}\\${basename(document.fileName)}"`,
-            ".php" : `cd "${dir}" ${divider} "${binPath.php}" "${dir}\\${basename(document.fileName)}"`,
-            ".kt"  : `cd "${dir}" ${divider} "${binPath.kt}" "${dir}\\${basename(document.fileName)}" -include-runtime -d ${noExt}.jar ${divider} java -jar ${noExt}.jar`,
-            ".dart": `cd "${dir}" ${divider} "${binPath.dart}" "${dir}\\${basename(document.fileName)}"`,
-            ".ts"  : `cd "${dir}" ${divider} ts-node "${dir}\\${basename(document.fileName)}"`,
-            ".go"  : `cd "${dir}" ${divider} "${binPath.go}" run "${dir}\\${basename(document.fileName)}"`,
+
+    static async envSetup() {
+        if (!configs.isWin) {
+            vscode.window.showErrorMessage(
+                `Environment management is only for Windows users with no admin permissions!!`
+            );
+            return;
         }
-        if(prefix){return prefix + runCmd[ext];}
-        return  runCmd[ext];
+        exec("rundll32.exe sysdm.cpl,EditEnvironmentVariables", (err, stdout, stderr) => {
+            if (err) { configs.outputChannel.appendLine(`Error: ${err.message}`); }
+            if (stdout) { configs.outputChannel.appendLine(`stdout: ${stdout}`); }
+            if (stderr) { configs.outputChannel.appendLine(`stderr: ${stderr}`); }
+        });
     }
-    catch(err){
-        configs.outputChannel.appendLine("Error: " + err);
-    }
-}
 
-export async function envSetup(outputChannel:vscode.OutputChannel, isWin:boolean){
-    if (!isWin) {return vscode.window.showErrorMessage("This feature is only available on Windows.");}
-    exec("rundll32.exe sysdm.cpl,EditEnvironmentVariables", (err, stdout, stderr) => {
-                if (err){outputChannel.appendLine(`Error: ${err.message}`);}
-                if(stdout){outputChannel.appendLine(`stdout: ${stdout}`);}
-                if(stderr){outputChannel.appendLine(`stderr: ${stderr}`);}
-    });
 }
-

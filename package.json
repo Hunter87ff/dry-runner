@@ -1,8 +1,8 @@
 {
     "name": "dry-runner",
     "displayName": "Dry Runner",
-    "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin code in one click.",
-    "version": "1.0.80",
+    "description": "Run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin and many more in one click.",
+    "version": "1.1.0",
     "publisher": "Spruce87",
     "author": {
         "name": "Hunter87"
@@ -64,45 +64,39 @@
         "configuration": {
             "title": "dry-runner",
             "properties": {
-                "dry-runner.mingwPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for C/C++"
-                },
-                "dry-runner.jdkPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Java"
-                },
-                "dry-runner.pythonPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Python"
-                },
-                "dry-runner.phpPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for PHP"
-                },
-                "dry-runner.jsPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for NodeJS"
-                },
-                "dry-runner.ktPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Kotlin"
-                },
-                "dry-runner.dartPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Dart"
-                },
-                "dry-runner.goPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Compiler path for Go"
+                "dry-runner.commands": {
+                    "type": "object",
+                    "scope": "window",
+                    "default": {
+                        "js": "cd {workspace} && node {filepath}",
+                        "py": "cd {workspace} && python {filepath}",
+                        "ts": "cd {workspace} && ts-node {filepath}",
+                        "php": "cd {workspace} && php {filepath}",
+                        "dart": "cd {workspace} && dart {filepath}",
+                        "go": "cd {workspace} && go run {filepath}",
+                        "sh": "cd {workspace} && bash {filepath}",
+                        "rb": "cd {workspace} && ruby {filepath}",
+                        "swift": "cd {workspace} && swift {filepath}",
+                        "lua": "cd {workspace} && lua {filepath}",
+                        "pl": "cd {workspace} && perl {filepath}",
+                        "r": "cd {workspace} && Rscript {filepath}",
+                        "scala": "cd {workspace} && scalac {filepath} && scala {filenameNoExt}",
+                        "java": "cd {workspace} && javac {filepath} && java {filenameNoExt}",
+                        "c": "cd {filedir} && gcc {filename} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "cpp": "cd {filedir} && g++ {filepath} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "cs": "cd {workspace} && csc {filepath} -out:{filenameNoExt}.exe && ./{filenameNoExt}.exe",
+                        "rs": "cd {workspace} && rustc {filepath} -o {filenameNoExt} && ./{filenameNoExt}",
+                        "kt": "cd {workspace} && kotlinc {filepath} -include-runtime -d {filenameNoExt}.jar && java -jar {filepathNoExt}.jar",
+                        "exe" : "cd {filedir} && {filename}",
+                        "bat" : "cd {filedir} && {filename}",
+                        "ps1" : "cd {filedir} && powershell -ExecutionPolicy Bypass -File {filename}",
+                        "cmd" : "cd {filedir} && {filename}",
+                        "" : "cd {filedir} && {filename}"
+                    },
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "markdownDescription": "Customize the command for different languages. some placeholders : `{workspace}`, `{filepath}`, `{filename}`, `{filenameNoExt}`"
                 }
             }
         },
@@ -168,15 +162,22 @@
     },
     "devDependencies": {
         "@types/glob": "^7.1.4",
+        "@types/minimatch": "^6.0.0",
         "@types/mocha": "^9.0.0",
         "@types/node": "14.x",
         "@types/vscode": "^1.63.0",
         "@typescript-eslint/eslint-plugin": "^5.1.0",
         "@typescript-eslint/parser": "^5.1.0",
-        "@vscode/test-electron": "^1.6.2",
+        "@vscode/test-electron": "^2.5.2",
         "eslint": "^8.1.0",
         "glob": "^7.1.7",
         "mocha": "^11.1.0",
         "typescript": "^4.9.5"
+    },
+    "overrides": {
+        "mocha": {
+            "diff": "8.0.3",
+            "serialize-javascript": "7.0.5"
+        }
     }
 }
