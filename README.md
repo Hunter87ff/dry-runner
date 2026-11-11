@@ -1,6 +1,6 @@
 # Dry Runner
-[![Latest Release](https://img.shields.io/github/v/release/hunter87ff/dry-runner?include_prereleases&label=Latest%20Release&logo=github&sort=semver&style=for-the-badge&logoColor=white)](https://github.com/hunter87ff/dry-runner/releases)
-[![Run and Test TypeScript](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml/badge.svg?branch=main)](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml) ![Downloads](https://img.shields.io/visual-studio-marketplace/d/Spruce87.dry-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/Spruce87.dry-runner)
+[![Latest Release](https://img.shields.io/github/v/release/hunter87ff/dry-runner?include_prereleases&label=latest%20release&logo=github&sort=semver&logoColor=white&style=flat)](https://github.com/hunter87ff/dry-runner/releases)
+[![Run and Test TypeScript](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml/badge.svg?branch=main)](https://github.com/Hunter87ff/dry-runner/actions/workflows/status.yml) [![Installs](https://vsmarketplacebadges.dev/installs-short/Spruce87.dry-runner.svg)](https://marketplace.visualstudio.com/items?itemName=Spruce87.dry-runner) [![Rating](https://vsmarketplacebadges.dev/rating-short/Spruce87.dry-runner.svg)](https://marketplace.visualstudio.com/items?itemName=Spruce87.dry-runner)
 ## Description
 dry-runner extension is a tool that allows you to compile and run C,C++, Python, Java, PHP, Javascript, TypeScript, Dart, Kotlin,Batch script, Shell script and much more in vs code, with integreted terminal.
 
